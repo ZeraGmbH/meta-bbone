@@ -1,0 +1,18 @@
+Yet another OE board support layer for beaglebone
+
+Currently we have already sources for beaglebone but they are missing:
+
+* meta-yocto-bsp: cape management / stable kernel releases
+* meta-beaglebone: lack of maintainership / tailored kernel
+
+This layer depends on:
+
+URI: git://git.openembedded.org/openembedded-core
+branch: master
+revision: HEAD
+
+Send pull requests to openembedded-devel@lists.openembedded.org with '[meta-bbone]' in the subject'
+
+When sending single patches, please using something like 'git send-email -1 --to openembedded-devel@lists.openembedded.org --subject-prefix meta-bbone'
+
+Layer maintainer: Andreas Müller <schnitzeltony@googlemail.com>
