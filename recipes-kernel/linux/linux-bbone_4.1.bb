@@ -1,6 +1,3 @@
-# Copyright (C) 2015 A.Müller <schnitzeltony@googlemail.com>
-# Released under the MIT license (see COPYING.MIT for the terms)
-
 require recipes-kernel/linux/linux-yocto.inc
 
 SRCBRANCH = "4.1"
