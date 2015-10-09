@@ -3,9 +3,9 @@ require recipes-kernel/linux/linux-yocto.inc
 DEPENDS += "dtc-native"
 
 KBRANCH = "4.1"
-SRCREV_machine_bbone = "a7a1ea5644de091f1a03c29935a5f781c33746ea"
+SRCREV_machine = "a7a1ea5644de091f1a03c29935a5f781c33746ea"
 
-SRCREV_dtoverlays_bbone = "26f9c00e3b85dc145c3ba48afaca03e5ba85c85d"
+SRCREV_dtoverlays = "26f9c00e3b85dc145c3ba48afaca03e5ba85c85d"
 DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
 
 SRC_URI = " \
