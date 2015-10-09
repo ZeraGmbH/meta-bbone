@@ -22,6 +22,8 @@ KBUILD_DEFCONFIG_bbone = "bb.org_defconfig"
 
 DTSNAMESFILE = "${B}/dtsnames"
 
+# dt-overlay handling below
+# TBD initrd required for boot params
 do_configure_append() {
     rm -f ${DTSNAMESFILE}
     for dts in `find ${WORKDIR}/${DESTSUFFIX_DT_OVERLAYS}/src/arm -name '*.dts'`; do
@@ -31,16 +33,38 @@ do_configure_append() {
         cp "$dts" "${S}/arch/arm/boot/dts/$dtsbase"
 
         # keep overlay name
-	dtb=`basename $dts | sed 's,\.dts$,.dtb,g'`
+        dtb=`basename $dts | sed 's,\.dts$,.dtb,g'`
         echo $dtb >> ${DTSNAMESFILE}
     done
 }
 
-# inspired by oe-core's linux-dtb.inc
 do_compile_append() {
     if [ -e "${DTSNAMESFILE}" ]; then
-        cat ${DTSNAMESFILE} | while read dtbovl; do
-            oe_runmake ${dtbovl}
+        cat ${DTSNAMESFILE} | while read dtb; do
+            oe_runmake ${dtb}
         done
     fi
+}
+
+do_install_append() {
+    if [ -e "${DTSNAMESFILE}" ]; then
+        cat ${DTSNAMESFILE} | while read dtb; do
+            dtbtarget=`basename ${dtb} | sed 's,\.dtb$,.dtbo,g'`
+            install ${B}/arch/arm/boot/dts/${dtb} ${D}/lib/firmware/$dtbtarget
+        done
+    fi
+}
+
+PACKAGES += "kernel-dtoverlays"
+FILES_kernel-dtoverlays = ""
+ALLOW_EMPTY_kernel-dtoverlays = "1"
+DESCRIPTION_kernel-dtoverlays = "Kernel devicetree ovelay meta package"
+
+PACKAGES_DYNAMIC += "^kernel-dtoverlay-.*"
+
+PACKAGESPLITFUNCS_prepend = "split_dt_overlays "
+
+python split_dt_overlays () {
+    overlays = do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.dtbo$', output_pattern='kernel-dtoverlay-%s', description='Devicetree overlay for %s', extra_depends='')
+    d.setVar('RDEPENDS_kernel-dtoverlays', ' '.join(overlays))
 }
