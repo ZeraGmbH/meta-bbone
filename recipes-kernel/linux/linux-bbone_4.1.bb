@@ -13,7 +13,9 @@ SRC_URI = " \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
 "
 
-LINUX_VERSION ?= "4.1.9-ti-r20"
+LINUX_VERSION = "4.1.9-ti-r20"
+LINUX_VERSION_EXTENSION = "-beagleboard.org"
+PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 
 COMPATIBLE_MACHINE_bbone = "bbone"
 KBUILD_DEFCONFIG_bbone = "bb.org_defconfig"
