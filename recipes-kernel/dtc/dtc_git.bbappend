@@ -6,3 +6,6 @@
 
 SRC_URI = "git://github.com/pantoniou/dtc.git;branch=dt-overlays6;"
 SRCREV = "4273dca28b716396cefde8027c7b3280a0b9a4b5"
+
+SOLIBSDEV = "fdt.so"
+FILES_${PN} += "${libdir}/libfdt-*.so"
