@@ -1,0 +1,28 @@
+From bdaf9195347c966a31388bd0412350a2ccf883e2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Wed, 21 Oct 2015 09:58:16 +0200
+Subject: [PATCH 1/2] dts/Makefile.am: remove invalid target
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ dts/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dts/Makefile.am b/dts/Makefile.am
+index 1a2ed95..c89092c 100644
+--- a/dts/Makefile.am
++++ b/dts/Makefile.am
+@@ -1,6 +1,6 @@
+ 
+ 
+-DTS=gpio_hd44780-00A0.dts gpio_leds-00A0.dts tlc5946-00A0.dts gpio_buttons-00A0.dts spi1-00A0.dts jd-t18003-ctrl-00A0.dts
++DTS=gpio_hd44780-00A0.dts gpio_leds-00A0.dts tlc5946-00A0.dts gpio_buttons-00A0.dts jd-t18003-ctrl-00A0.dts
+ DTBs=$(patsubst %.dts,%.dtbo,$(DTS))
+ 
+ %.dtbo: %.dts
+-- 
+2.1.0
+
