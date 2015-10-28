@@ -3,7 +3,7 @@ require recipes-kernel/linux/linux-yocto.inc
 DEPENDS += "dtc-native"
 
 KBRANCH = "4.1"
-SRCREV_machine = "a7a1ea5644de091f1a03c29935a5f781c33746ea"
+SRCREV_machine = "65459cad43e55bce974861eebf934e9238424335"
 
 SRCREV_dtoverlays = "26f9c00e3b85dc145c3ba48afaca03e5ba85c85d"
 DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
@@ -13,7 +13,7 @@ SRC_URI = " \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
 "
 
-LINUX_VERSION = "4.1.9-ti-r20"
+LINUX_VERSION = "4.1.10-ti-r24"
 LINUX_VERSION_EXTENSION = "-beagleboard.org"
 PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 
