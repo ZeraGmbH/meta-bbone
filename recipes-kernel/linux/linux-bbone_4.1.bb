@@ -10,7 +10,7 @@ DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
 # linux git repository rebases branch weekly and tags revisions. Therefore
 # branch and commit id break and we need to mirror sources @schnitzeltony
 SRC_URI = " \
-    git://github.com/schnitzeltony/linux.git;name=machine;branch=for-meta-bbone; \
+    git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.12-ti-r28; \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
 "
 
