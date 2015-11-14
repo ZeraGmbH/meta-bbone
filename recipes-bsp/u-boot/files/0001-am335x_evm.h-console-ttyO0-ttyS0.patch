@@ -1,0 +1,35 @@
+From 77f46d5a21053646c5ee93e8ab87f539387fb9e0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Fri, 13 Nov 2015 23:32:06 +0100
+Subject: [PATCH] am335x_evm.h: console ttyO0 -> ttyS0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+fixes
+
+[    0.000451] WARNING: Your 'console=ttyO0' has been replaced by 'ttyS0'
+[    0.000461] This ensures that you still see kernel messages. Please
+[    0.000469] update your kernel commandline.
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ include/configs/am335x_evm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/am335x_evm.h b/include/configs/am335x_evm.h
+index 3cf768e..6bdc816 100644
+--- a/include/configs/am335x_evm.h
++++ b/include/configs/am335x_evm.h
+@@ -76,7 +76,7 @@
+ 	"bootdir=/boot\0" \
+ 	"bootfile=zImage\0" \
+ 	"fdtfile=undefined\0" \
+-	"console=ttyO0,115200n8\0" \
++	"console=ttyS0,115200n8\0" \
+ 	"partitions=" \
+ 		"uuid_disk=${uuid_gpt_disk};" \
+ 		"name=rootfs,start=2MiB,size=-,uuid=${uuid_gpt_rootfs}\0" \
+-- 
+2.1.0
+
