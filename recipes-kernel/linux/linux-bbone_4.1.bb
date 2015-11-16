@@ -2,7 +2,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 DEPENDS += "dtc-native"
 
-SRCREV_machine = "8da95c4e7b8c92c2bacd96e051b1c92f744dfaad"
+SRCREV_machine = "e8b1e4a0193c70249bb27f1a173f468ac55e5562"
 
 SRCREV_dtoverlays = "26f9c00e3b85dc145c3ba48afaca03e5ba85c85d"
 DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
@@ -10,11 +10,11 @@ DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
 # linux git repository rebases branch weekly and tags revisions. Therefore
 # branch and commit id break and we need to mirror sources @schnitzeltony
 SRC_URI = " \
-    git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.12-ti-r28; \
+    git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.13-ti-r30; \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
 "
 
-LINUX_VERSION = "4.1.12-ti-r28"
+LINUX_VERSION = "4.1.13-ti-r30"
 LINUX_VERSION_EXTENSION = "-beagleboard.org"
 PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 
