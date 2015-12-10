@@ -1,0 +1,8 @@
+# Examples what to set in uEmv.txt - optargs can be combined by 
+# space separated list
+
+# enabling dt overlay at boot
+optargs=bone_capemgr.enable_partno=BB-SPIDEV0
+
+# no serial boot log -> boot faster
+optargs=quiet
