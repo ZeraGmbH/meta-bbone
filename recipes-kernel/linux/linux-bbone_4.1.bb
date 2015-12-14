@@ -2,19 +2,19 @@ require recipes-kernel/linux/linux-yocto.inc
 
 DEPENDS += "dtc-native"
 
-SRCREV_machine = "e8b1e4a0193c70249bb27f1a173f468ac55e5562"
+SRCREV_machine = "58756fb087cb081259aadf1b6d246584d332f3e7"
 
-SRCREV_dtoverlays = "26f9c00e3b85dc145c3ba48afaca03e5ba85c85d"
+SRCREV_dtoverlays = "e4640a24dcd0115bcfb6f491c312de468cd235de"
 DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
 
 # linux git repository rebases branch weekly and tags revisions. Therefore
 # branch and commit id break and we need to mirror sources @schnitzeltony
 SRC_URI = " \
-    git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.13-ti-r30; \
+    git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.13-ti-r36; \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
 "
 
-LINUX_VERSION = "4.1.13-ti-r30"
+LINUX_VERSION = "4.1.13-ti-r36"
 LINUX_VERSION_EXTENSION = "-beagleboard.org"
 PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 
@@ -24,7 +24,6 @@ KBUILD_DEFCONFIG_bbone = "bb.org_defconfig"
 DTSNAMESFILE = "${B}/dtsnames"
 
 # dt-overlay handling below
-# TBD initrd required for boot params
 do_configure_append() {
     rm -f ${DTSNAMESFILE}
     for dts in `find ${WORKDIR}/${DESTSUFFIX_DT_OVERLAYS}/src/arm -name '*.dts'`; do
