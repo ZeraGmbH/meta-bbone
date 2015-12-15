@@ -24,6 +24,22 @@ KBUILD_DEFCONFIG_bbone = "bb.org_defconfig"
 DTSNAMESFILE = "${B}/dtsnames"
 
 # dt-overlay handling below
+# own overlays can be added by appending the following:
+#
+# <snippet>
+# DTS_FILE = "BB-MY-DTS-00A0"
+#
+# SRC_URI += " \
+#     file://${DTS_FILE}.dts \
+# "
+#
+# do_configure_append() {
+#     # make our dt-overlay build
+#     cp -f "${WORKDIR}/${DTS_FILE}.dts" "${S}/arch/arm/boot/dts/$dtsbase"
+#     echo "${DTS_FILE}.dtb" >> ${DTSNAMESFILE}
+# }
+# </snippet>
+#
 do_configure_append() {
     rm -f ${DTSNAMESFILE}
     for dts in `find ${WORKDIR}/${DESTSUFFIX_DT_OVERLAYS}/src/arm -name '*.dts'`; do
