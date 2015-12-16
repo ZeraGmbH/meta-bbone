@@ -73,22 +73,20 @@ run_root() {
 	    $DEBUG umount -f ${DevicePath}?*
 	fi
 
+	# kill u-boot environment
 	$DEBUG dd if=/dev/zero of=$DevicePath bs=1024 count=1024
 
-	# force 512 bytes / sector
-	export LC_ALL=C
-	SIZE=`fdisk -l $DevicePath | grep Disk | grep bytes | awk '{print $5}'`
-	echo "Disk size: $SIZE bytes"
-	CYLINDERS=`echo $SIZE/255/63/512 | bc`
-	echo "Cylinders: $CYLINDERS"
-	# setup partitions
-	{
-	echo ,9,0x0C,*
-	echo ,,,-
-	} | $DEBUG sfdisk -D -H 255 -S 63 -C $CYLINDERS $DevicePath
+	# Create the FAT partition of 64MB and make it bootable
+	$DEBUG parted -s $DevicePath mklabel msdos
+	$DEBUG parted -s $DevicePath mkpart primary fat32 63s 64MB
+	$DEBUG parted -s $DevicePath toggle 1 boot
+
+	# Create the rootfs partition until end of device
+	$DEBUG parted -s $DevicePath -- mkpart primary $RootfsType 64MB -0
+
 	# write partitions
-	$DEBUG mkfs.vfat -F 32 -n "boot" -s 2 ${DevicePath}1
-	$DEBUG mke2fs -j -t $RootfsType -L "rootfs" ${DevicePath}2
+	$DEBUG mkfs.vfat -F 32 -n "boot" -I ${DevicePath}1
+	$DEBUG mke2fs -F -j -t $RootfsType -L "rootfs" ${DevicePath}2
 }
 
 
