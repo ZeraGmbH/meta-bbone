@@ -2,7 +2,7 @@
 # space separated list
 
 # enabling dt overlay at boot
-optargs=bone_capemgr.enable_partno=BB-SPIDEV0
+optargs=bone_capemgr.enable_partno=BB-SPIDEV0,BB-SPIDEV1
 
 # no serial boot log -> boot faster
 optargs=quiet
