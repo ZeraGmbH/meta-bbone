@@ -12,6 +12,7 @@ DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
 SRC_URI = " \
     git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.13-ti-r36; \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
+    file://uEnv.txt \
 "
 
 LINUX_VERSION = "4.1.13-ti-r36"
@@ -63,13 +64,25 @@ do_compile_append() {
 }
 
 do_install_append() {
+    # dt-overlays
     if [ -e "${DTSNAMESFILE}" ]; then
         cat ${DTSNAMESFILE} | while read dtb; do
             dtbtarget=`basename ${dtb} | sed 's,\.dtb$,.dtbo,g'`
             install ${B}/arch/arm/boot/dts/${dtb} ${D}/lib/firmware/$dtbtarget
         done
     fi
+
+    # ok - uEnv.txt is read by u-boot, but the contents affect kernel so
+    # we keep uEnv.txt here not at u-boot.
+    install -d ${D}/boot/
+    install -m 0755 ${WORKDIR}/uEnv.txt ${D}/boot
 }
+
+do_deploy_append() {
+    cp ${WORKDIR}/uEnv.txt ${DEPLOY_DIR_IMAGE}
+}
+
+FILES_kernel-image += "/boot/uEnv.txt"
 
 PACKAGES += "kernel-dtoverlays"
 FILES_kernel-dtoverlays = ""
