@@ -106,6 +106,9 @@ run_root() {
 	cp ${IMAGEDIR}/u-boot-${MACHINE}.img /tmp/tmp_mount$$/u-boot.img
 	cp ${IMAGEDIR}/${KernelImageType}-${MACHINE}.bin /tmp/tmp_mount$$/${KernelImageType}
 	cp ${IMAGEDIR}/*.dtb /tmp/tmp_mount$$
+	if [ -e ${IMAGEDIR}/uEnv.txt ] ; then
+		cp ${IMAGEDIR}/uEnv.txt /tmp/tmp_mount$$
+	fi
 	sleep 1
 	umount ${DevicePath}1 || exit 1
 
