@@ -22,8 +22,6 @@ PV = "${LINUX_VERSION}${LINUX_VERSION_EXTENSION}+git${SRCPV}"
 COMPATIBLE_MACHINE_bbone = "bbone"
 KBUILD_DEFCONFIG_bbone = "bb.org_defconfig"
 
-DTSNAMESFILE = "${B}/dtsnames"
-
 # dt-overlay handling below
 # own overlays can be added by appending the following:
 #
@@ -36,41 +34,36 @@ DTSNAMESFILE = "${B}/dtsnames"
 #
 # do_configure_append() {
 #     # make our dt-overlay build
-#     cp -f "${WORKDIR}/${DTS_FILE}.dts" "${S}/arch/arm/boot/dts/$dtsbase"
-#     echo "${DTS_FILE}.dtb" >> ${DTSNAMESFILE}
+#     cp -f "${WORKDIR}/${DTS_FILE}.dts" "${B}/${DESTSUFFIX_DT_OVERLAYS}"
 # }
 # </snippet>
 #
 do_configure_append() {
-    rm -f ${DTSNAMESFILE}
+    mkdir -p ${B}/${DESTSUFFIX_DT_OVERLAYS}
     for dts in `find ${WORKDIR}/${DESTSUFFIX_DT_OVERLAYS}/src/arm -name '*.dts'`; do
-        # copy dt overlays to kernel tree
+        # copy dt overlays to builddir
         dtsbase=`basename $dts`
         echo "Overlay $dtsbase found"
-        cp "$dts" "${S}/arch/arm/boot/dts/$dtsbase"
-
-        # keep overlay name
-        dtb=`basename $dts | sed 's,\.dts$,.dtb,g'`
-        echo $dtb >> ${DTSNAMESFILE}
+        cp -f "$dts" "${B}/${DESTSUFFIX_DT_OVERLAYS}"
     done
 }
 
 do_compile_append() {
-    if [ -e "${DTSNAMESFILE}" ]; then
-        cat ${DTSNAMESFILE} | while read dtb; do
-            oe_runmake ${dtb}
-        done
-    fi
+    for dts in `find ${B}/${DESTSUFFIX_DT_OVERLAYS} -name '*.dts'`; do
+        dtbtarget=`echo ${dts} | sed 's,\.dts$,.dtbo,g'`
+        echo "Compiling dt $dts to $dtbtarget"
+        # 1. cpp preprocessor for 'old' dts containing #include
+        cpp -nostdinc -I ${S}/arch/arm/boot/dts/include -undef -x assembler-with-cpp ${dts} > ${dts}.tmp
+        # 2. dtc
+	${STAGING_BINDIR_NATIVE}/dtc -i ${S}/arch/arm/boot/dts/include -O dtb -o $dtbtarget -b 0 -@ ${dts}.tmp
+    done
 }
 
 do_install_append() {
     # dt-overlays
-    if [ -e "${DTSNAMESFILE}" ]; then
-        cat ${DTSNAMESFILE} | while read dtb; do
-            dtbtarget=`basename ${dtb} | sed 's,\.dtb$,.dtbo,g'`
-            install ${B}/arch/arm/boot/dts/${dtb} ${D}/lib/firmware/$dtbtarget
-        done
-    fi
+    for dtbo in `find ${B}/${DESTSUFFIX_DT_OVERLAYS} -name '*.dtbo'`; do
+        install ${dtbo} ${D}/lib/firmware
+    done
 
     # ok - uEnv.txt is read by u-boot, but the contents affect kernel so
     # we keep uEnv.txt here not at u-boot.
