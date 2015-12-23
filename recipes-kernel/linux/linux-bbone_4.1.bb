@@ -72,7 +72,7 @@ do_install_append() {
 }
 
 do_deploy_append() {
-    cp ${WORKDIR}/uEnv.txt ${DEPLOY_DIR_IMAGE}
+    cp ${WORKDIR}/uEnv.txt ${DEPLOYDIR}
 }
 
 FILES_kernel-image += "/boot/uEnv.txt"
