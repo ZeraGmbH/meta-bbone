@@ -1,0 +1,67 @@
+From ee8338ef260d1e7ab593cb4f5eac4ccd1eb7bef9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Wed, 2 Nov 2016 11:13:13 +0100
+Subject: [PATCH] Makefile: align build to avoid conflicts with kernel's dtc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstream-Status: Inappropriate [configuration] 
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ Makefile | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c1d0757..335f7a7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -107,11 +107,7 @@ include Makefile.convert-dtsv0
+ include Makefile.dtc
+ include Makefile.utils
+ 
+-BIN += convert-dtsv0
+ BIN += dtc
+-BIN += fdtdump
+-BIN += fdtget
+-BIN += fdtput
+ 
+ SCRIPTS = dtdiff
+ 
+@@ -133,8 +129,8 @@ endif
+ #
+ LIBFDT_objdir = libfdt
+ LIBFDT_srcdir = libfdt
+-LIBFDT_archive = $(LIBFDT_objdir)/libfdt.a
+-LIBFDT_lib = $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT)
++LIBFDT_archive = $(LIBFDT_objdir)/libfdtbbone.a
++LIBFDT_lib = $(LIBFDT_objdir)/libfdtbbone-$(DTC_VERSION).$(SHAREDLIB_EXT)
+ LIBFDT_include = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_INCLUDES))
+ LIBFDT_version = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_VERSION))
+ 
+@@ -160,10 +156,10 @@ endif
+ # intermediate target and building them again "for real"
+ .SECONDARY: $(DTC_GEN_SRCS) $(CONVERT_GEN_SRCS)
+ 
+-install-bin: all $(SCRIPTS)
++install-bin: all
+ 	@$(VECHO) INSTALL-BIN
+ 	$(INSTALL) -d $(DESTDIR)$(BINDIR)
+-	$(INSTALL) $(BIN) $(SCRIPTS) $(DESTDIR)$(BINDIR)
++	$(INSTALL) $(BIN) $(DESTDIR)$(BINDIR)
+ 
+ install-lib: all
+ 	@$(VECHO) INSTALL-LIB
+@@ -178,7 +174,7 @@ install-includes:
+ 	$(INSTALL) -d $(DESTDIR)$(INCLUDEDIR)
+ 	$(INSTALL) -m 644 $(LIBFDT_include) $(DESTDIR)$(INCLUDEDIR)
+ 
+-install: install-bin install-lib install-includes
++install: install-bin install-lib
+ 
+ $(VERSION_FILE): Makefile FORCE
+ 	$(call filechk,version)
+-- 
+2.5.5
+

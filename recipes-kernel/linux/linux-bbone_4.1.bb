@@ -1,6 +1,6 @@
 require recipes-kernel/linux/linux-yocto.inc
 
-DEPENDS += "dtc-native"
+DEPENDS += "dtc-bbone-native"
 
 SRCREV_machine = "58756fb087cb081259aadf1b6d246584d332f3e7"
 
@@ -56,7 +56,7 @@ do_compile_append() {
         # 1. cpp preprocessor for 'old' dts containing #include
         cpp -nostdinc -I ${S}/arch/arm/boot/dts/include -undef -x assembler-with-cpp ${dts} > ${dts}.tmp
         # 2. dtc
-	${STAGING_BINDIR_NATIVE}/dtc -i ${S}/arch/arm/boot/dts/include -O dtb -o $dtbtarget -b 0 -@ ${dts}.tmp
+	${STAGING_BINDIR_NATIVE}/dtc-bbone -i ${S}/arch/arm/boot/dts/include -O dtb -o $dtbtarget -b 0 -@ ${dts}.tmp
     done
 }
 
