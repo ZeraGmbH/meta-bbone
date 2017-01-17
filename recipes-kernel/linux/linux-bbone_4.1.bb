@@ -1,6 +1,6 @@
 require recipes-kernel/linux/linux-yocto.inc
 
-DEPENDS += "dtc-bbone-native"
+DEPENDS += "dtc-bbone-native lzop-native bc-native"
 
 SRCREV_machine = "58756fb087cb081259aadf1b6d246584d332f3e7"
 
