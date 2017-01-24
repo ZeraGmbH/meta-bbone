@@ -2,7 +2,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 DEPENDS += "dtc-bbone-native lzop-native bc-native"
 
-SRCREV_machine = "58756fb087cb081259aadf1b6d246584d332f3e7"
+SRCREV_machine = "3886feba6d329091a09e6da00e225c53e30c9007"
 
 SRCREV_dtoverlays = "e4640a24dcd0115bcfb6f491c312de468cd235de"
 DESTSUFFIX_DT_OVERLAYS = "dtoverlays"
