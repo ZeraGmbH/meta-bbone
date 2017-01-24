@@ -54,7 +54,7 @@ do_compile_append() {
         dtbtarget=`echo ${dts} | sed 's,\.dts$,.dtbo,g'`
         echo "Compiling dt $dts to $dtbtarget"
         # 1. cpp preprocessor for 'old' dts containing #include
-        cpp -nostdinc -I ${S}/arch/arm/boot/dts/include -undef -x assembler-with-cpp ${dts} > ${dts}.tmp
+        ${CPP} -nostdinc -I ${S}/arch/arm/boot/dts/include -undef -x assembler-with-cpp ${dts} > ${dts}.tmp
         # 2. dtc
 	${STAGING_BINDIR_NATIVE}/dtc-bbone -i ${S}/arch/arm/boot/dts/include -O dtb -o $dtbtarget -b 0 -@ ${dts}.tmp
     done
