@@ -1,0 +1,98 @@
+From bb0a32470948fcf6bd54615e3fd4786ebe3b69e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Tue, 24 Jan 2017 11:23:35 +0100
+Subject: [PATCH] Test: stop booting by deadloop after first serial output
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ arch/arm/cpu/armv7/am33xx/board.c | 6 ++++++
+ common/spl/spl.c                  | 8 +++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/cpu/armv7/am33xx/board.c b/arch/arm/cpu/armv7/am33xx/board.c
+index 67bef23..1a46cf1 100644
+--- a/arch/arm/cpu/armv7/am33xx/board.c
++++ b/arch/arm/cpu/armv7/am33xx/board.c
+@@ -211,8 +211,11 @@ int arch_misc_init(void)
+  */
+ int board_early_init_f(void)
+ {
++	puts("SPL: board_early_init_f started\n");
+ 	prcm_init();
++	puts("SPL: prcm_init returned\n");
+ 	set_mux_conf_regs();
++	puts("SPL: set_mux_conf_regs returned\n");
+ 
+ 	return 0;
+ }
+@@ -278,8 +281,11 @@ static void watchdog_disable(void)
+ #ifdef CONFIG_SPL_BUILD
+ void board_init_f(ulong dummy)
+ {
++	preloader_console_init();
+ 	board_early_init_f();
++	puts("SPL: board_early_init_f returned\n");
+ 	sdram_init();
++	puts("SPL: sdram_init returned\n");
+ }
+ #endif
+ 
+diff --git a/common/spl/spl.c b/common/spl/spl.c
+index aeb0645..60058e5 100644
+--- a/common/spl/spl.c
++++ b/common/spl/spl.c
+@@ -153,6 +153,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 	u32 boot_device;
+ 	int ret;
+ 
++	puts("SPL: board_init_r started\n");
+ 	debug(">>spl:board_init_r()\n");
+ 
+ #if defined(CONFIG_SYS_SPL_MALLOC_START)
+@@ -163,6 +164,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 	gd->malloc_limit = CONFIG_SYS_MALLOC_F_LEN;
+ 	gd->malloc_ptr = 0;
+ #endif
++	puts("SPL: board_init_r after malloc\n");
+ 	if (IS_ENABLED(CONFIG_OF_CONTROL) &&
+ 			!IS_ENABLED(CONFIG_SPL_DISABLE_OF_CONTROL)) {
+ 		ret = fdtdec_setup();
+@@ -171,6 +173,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 			hang();
+ 		}
+ 	}
++	puts("SPL: board_init_r after fdtdec_setup\n");
+ 	if (IS_ENABLED(CONFIG_SPL_DM)) {
+ 		ret = dm_init_and_scan(true);
+ 		if (ret) {
+@@ -178,6 +181,7 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 			hang();
+ 		}
+ 	}
++	puts("SPL: board_init_r after dm_init_and_scan\n");
+ 
+ #ifndef CONFIG_PPC
+ 	/*
+@@ -186,13 +190,15 @@ void board_init_r(gd_t *dummy1, ulong dummy2)
+ 	 */
+ 	timer_init();
+ #endif
++	puts("SPL: board_init_r after timer_init\n");
+ 
+ #ifdef CONFIG_SPL_BOARD_INIT
+ 	spl_board_init();
+ #endif
++	puts("SPL: board_init_r after board_init\n");
+ 
+ 	boot_device = spl_boot_device();
+-	debug("boot device - %d\n", boot_device);
++	printf("boot device - %d\n", boot_device);
+ 	switch (boot_device) {
+ #ifdef CONFIG_SPL_RAM_DEVICE
+ 	case BOOT_DEVICE_RAM:
+-- 
+2.5.5
+
