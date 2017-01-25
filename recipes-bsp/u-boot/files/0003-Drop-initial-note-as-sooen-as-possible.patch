@@ -1,0 +1,32 @@
+From 661e34a1a3d2623bd3ab3e4afb852285eddba776 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Wed, 25 Jan 2017 13:05:04 +0100
+Subject: [PATCH] Drop initial note as sooen as possible
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+* we had a custom board with broken sdram that seemed completely dead form
+  console's perspective
+* we see initial message twice now but this shold be ok
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ arch/arm/cpu/armv7/am33xx/board.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/cpu/armv7/am33xx/board.c b/arch/arm/cpu/armv7/am33xx/board.c
+index 67bef23..b05caa8 100644
+--- a/arch/arm/cpu/armv7/am33xx/board.c
++++ b/arch/arm/cpu/armv7/am33xx/board.c
+@@ -278,6 +278,7 @@ static void watchdog_disable(void)
+ #ifdef CONFIG_SPL_BUILD
+ void board_init_f(ulong dummy)
+ {
++	preloader_console_init();
+ 	board_early_init_f();
+ 	sdram_init();
+ }
+-- 
+2.5.5
+
