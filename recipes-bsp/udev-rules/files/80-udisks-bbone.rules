@@ -1,0 +1,14 @@
+##############################################################################################################
+
+# Partitions which desktops should not display
+#
+
+# boot partition
+ENV{ID_FS_TYPE}=="vfat", ENV{ID_FS_LABEL}=="boot", \
+  ENV{UDISKS_PRESENTATION_HIDE}="1", ENV{UDISKS_IGNORE}="1"
+
+# rootfs partition
+ENV{ID_FS_TYPE}=="ext4", ENV{ID_FS_LABEL}=="rootfs", \
+  ENV{UDISKS_PRESENTATION_HIDE}="1", ENV{UDISKS_IGNORE}="1"
+
+##############################################################################################################
