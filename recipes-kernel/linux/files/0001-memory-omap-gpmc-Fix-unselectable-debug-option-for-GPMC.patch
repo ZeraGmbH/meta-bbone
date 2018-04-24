@@ -1,0 +1,50 @@
+From patchwork Tue Oct  6 12:13:56 2015
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: memory: omap-gpmc: Fix unselectable debug option for GPMC
+From: Tony Lindgren <tony@atomide.com>
+X-Patchwork-Id: 7334711
+Message-Id: <1444133636-31430-1-git-send-email-tony@atomide.com>
+To: linux-kernel@vger.kernel.org
+Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org
+Date: Tue,  6 Oct 2015 05:13:56 -0700
+
+Commit 63aa945b1013 ("memory: omap-gpmc: Add Kconfig option for debug")
+added a debug option for GPMC, but somehow managed to keep it unselectable.
+
+This probably happened because I had some uncommitted changes and the
+GPMC option is selected in the platform specific Kconfig.
+
+Let's also update the description a bit, it does not mention that
+enabling the debug option also disables the reset of GPMC controller
+during the init as pointed out by Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de>.
+
+Fixes: 63aa945b1013 ("memory: omap-gpmc: Add Kconfig option for debug")
+Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/memory/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -58,12 +58,13 @@ config OMAP_GPMC
+ 	  memory drives like NOR, NAND, OneNAND, SRAM.
+ 
+ config OMAP_GPMC_DEBUG
+-	bool
++	bool "Enable GPMC debug output and skip reset of GPMC during init"
+ 	depends on OMAP_GPMC
+ 	help
+ 	  Enables verbose debugging mostly to decode the bootloader provided
+-	  timings. Enable this during development to configure devices
+-	  connected to the GPMC bus.
++	  timings. To preserve the bootloader provided timings, the reset
++	  of GPMC is skipped during init. Enable this during development to
++	  configure devices connected to the GPMC bus.
+ 
+ config MVEBU_DEVBUS
+ 	bool "Marvell EBU Device Bus Controller"
