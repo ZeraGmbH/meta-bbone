@@ -95,16 +95,14 @@ run_root() {
 		mkdir /tmp/tmp_mount$$
 	fi
 
-	# kernel & bootloader
-	echo "Writing kernel and bootloader to boot partition"
+	# bootloaders and environment
+	echo "Writing bootloaders and environment to boot partition"
 	mount ${DevicePath}1 /tmp/tmp_mount$$ || exit 1
 	rm -rf /tmp/tmp_mount$$/*
 	if [ -e ${IMAGEDIR}/MLO-${MACHINE} ] ; then
 		cp ${IMAGEDIR}/MLO-${MACHINE} /tmp/tmp_mount$$/MLO
 	fi
 	cp ${IMAGEDIR}/u-boot-${MACHINE}.img /tmp/tmp_mount$$/u-boot.img
-	cp ${IMAGEDIR}/${KernelImageType}-${MACHINE}.bin /tmp/tmp_mount$$/${KernelImageType}
-	cp ${IMAGEDIR}/*.dtb /tmp/tmp_mount$$
 	if [ -e ${IMAGEDIR}/uEnv.txt ] ; then
 		cp ${IMAGEDIR}/uEnv.txt /tmp/tmp_mount$$
 	fi
