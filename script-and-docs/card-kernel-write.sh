@@ -94,25 +94,40 @@ run_root() {
 		mkdir /tmp/tmp_mount$$
 	fi
 
-	# boot partition
-	echo "Writing kernel to boot partition"
+	# bootloaders and environment
+	echo "Writing bootloaders and environment to boot partition"
 	mount ${DevicePath}1 /tmp/tmp_mount$$ || exit 1
-	cp $KernelImage /tmp/tmp_mount$$/$KernelImageType
+	rm -rf /tmp/tmp_mount$$/*
+	if [ -e ${IMAGEDIR}/MLO-${MACHINE} ] ; then
+		cp ${IMAGEDIR}/MLO-${MACHINE} /tmp/tmp_mount$$/MLO
+	fi
+	cp ${IMAGEDIR}/u-boot-${MACHINE}.img /tmp/tmp_mount$$/u-boot.img
+	if [ -e ${IMAGEDIR}/uEnv.txt ] ; then
+		cp ${IMAGEDIR}/uEnv.txt /tmp/tmp_mount$$
+	fi
 	sleep 1
 	umount ${DevicePath}1 || exit 1
 
-	# rootfs
-	echo "Writing kernel to rootfs"
+	# rootfs/boot
 	mount ${DevicePath}2 /tmp/tmp_mount$$ || exit 1
 	cd /tmp/tmp_mount$$/boot
+	echo "Writing kernel to rootfs"
 	rm -f [zu]Image*
-	# kernel
 	KernelFileName=`basename $KernelImage`
 	KernelDirName=`dirname  $KernelImage`
-        KernelShortFileName=${KernelFileName%*-*-*-*}
+	KernelShortFileName=${KernelFileName%*-*-*-*}
 	cp $KernelImage $KernelShortFileName
 	ln -sf $KernelShortFileName $KernelImageType
-	# modules
+
+	echo "Writing devicetrees to rootfs/boot"
+	rm -f *.dtb
+	for dtb in `find ${IMAGEDIR} -name "[zu]Image-am335x*.dtb"`; do
+		bname=`basename $dtb`
+        newname=`echo $bname | sed -e 's:[zu]Image-:devicetree-&:'`
+        cp $dtb $newname
+        linkname=`echo $bname | sed -e 's:[zu]Image-::'`
+		ln -sf $newname $linkname
+    done
 	echo "Writing modules to rootfs"
 	cd ..
 	ModulesFileName=`echo $KernelFileName | sed -e s/${KernelImageType}/modules/ -e s/\.bin/\.tgz/`
