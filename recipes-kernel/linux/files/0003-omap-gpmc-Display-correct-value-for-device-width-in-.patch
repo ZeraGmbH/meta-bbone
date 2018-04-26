@@ -1,0 +1,104 @@
+From d0f63d1ed339560502292e3636ac13cda736b95f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Thu, 26 Apr 2018 11:07:52 +0200
+Subject: [PATCH] omap-gpmc: Display correct value for device-width in debug
+ output
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Devicetree accepts '1' for 8-Bit and '2' for 16-Bit bus width but
+register GPMC_CS_CONFIG1/DEVICESIZE is zero based: '0' for 8-Bit and '1' for
+16-Bit. Hence the value displayed in debug log is not what was set in
+devicetree.
+
+To fix a parameter 'add' was introduced in 'get_gpmc_timing_reg'. While
+being at the description fixed a typo in @max.
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ drivers/memory/omap-gpmc.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index 139c3d2ea68b..c2038359dd29 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -404,17 +404,18 @@ static void gpmc_cs_bool_timings(int cs, const struct gpmc_bool_timings *p)
+  * @reg:     GPMC_CS_CONFIGn register offset.
+  * @st_bit:  Start Bit
+  * @end_bit: End Bit. Must be >= @st_bit.
+- * @ma:x     Maximum parameter value (before optional @shift).
++ * @max:     Maximum parameter value (before optional @shift or @add).
+  *           If 0, maximum is as high as @st_bit and @end_bit allow.
+  * @name:    DTS node name, w/o "gpmc,"
+  * @cd:      Clock Domain of timing parameter.
+  * @shift:   Parameter value left shifts @shift, which is then printed instead of value.
++ * @add:     Parameter value offset, which is then printed instead of value.
+  * @raw:     Raw Format Option.
+  *           raw format:  gpmc,name = <value>
+  *           tick format: gpmc,name = <value> /&zwj;* x ns -- y ns; x ticks *&zwj;/
+  *           Where x ns -- y ns result in the same tick value.
+  *           When @max is exceeded, "invalid" is printed inside comment.
+- * @noval:   Parameter values equal to 0 are not printed.
++ * @noval:   Parameter values equal to 0 are not printed (before optional @add).
+  * @return:  Specified timing parameter (after optional @shift).
+  *
+  */
+@@ -423,7 +424,7 @@ static int get_gpmc_timing_reg(
+ 	int cs, int reg, int st_bit, int end_bit, int max,
+ 	const char *name, const enum gpmc_clk_domain cd,
+ 	/* value transform */
+-	int shift,
++	int shift, int add,
+ 	/* format specifiers */
+ 	bool raw, bool noval)
+ {
+@@ -443,6 +444,7 @@ static int get_gpmc_timing_reg(
+ 		l = (shift << l);
+ 	if (noval && (l == 0))
+ 		return 0;
++	l += add;
+ 	if (!raw) {
+ 		/* DTS tick format for timings in ns */
+ 		unsigned int time_ns;
+@@ -467,19 +469,19 @@ static int get_gpmc_timing_reg(
+ 	pr_info("cs%i %s: 0x%08x\n", cs, #config, \
+ 		gpmc_cs_read_reg(cs, config))
+ #define GPMC_GET_RAW(reg, st, end, field) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 1, 0)
+-#define GPMC_GET_RAW_MAX(reg, st, end, max, field) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, GPMC_CD_FCLK, 0, 1, 0)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 0, 1, 0)
++#define GPMC_GET_RAW_MAX(reg, st, end, max, add, field) \
++	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, GPMC_CD_FCLK, 0, 1, 1, 0)
+ #define GPMC_GET_RAW_BOOL(reg, st, end, field) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 1, 1)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 0, 1, 1)
+ #define GPMC_GET_RAW_SHIFT_MAX(reg, st, end, shift, max, field) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, GPMC_CD_FCLK, (shift), 1, 1)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, GPMC_CD_FCLK, (shift), 0, 1, 1)
+ #define GPMC_GET_TICKS(reg, st, end, field) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 0, 0)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, GPMC_CD_FCLK, 0, 0, 0, 0)
+ #define GPMC_GET_TICKS_CD(reg, st, end, field, cd) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, (cd), 0, 0, 0)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), 0, field, (cd), 0, 0, 0, 0)
+ #define GPMC_GET_TICKS_CD_MAX(reg, st, end, max, field, cd) \
+-	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, (cd), 0, 0, 0)
++	get_gpmc_timing_reg(cs, (reg), (st), (end), (max), field, (cd), 0, 0, 0, 0)
+ 
+ static void gpmc_show_regs(int cs, const char *desc)
+ {
+@@ -504,7 +506,7 @@ static void gpmc_cs_show_timings(int cs, const char *desc)
+ 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1,  4,  4, "time-para-granularity");
+ 	GPMC_GET_RAW(GPMC_CS_CONFIG1,  8,  9, "mux-add-data");
+ 	GPMC_GET_RAW_MAX(GPMC_CS_CONFIG1, 12, 13,
+-			 GPMC_CONFIG1_DEVICESIZE_MAX, "device-width");
++			 GPMC_CONFIG1_DEVICESIZE_MAX, 1, "device-width");
+ 	GPMC_GET_RAW(GPMC_CS_CONFIG1, 16, 17, "wait-pin");
+ 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1, 21, 21, "wait-on-write");
+ 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1, 22, 22, "wait-on-read");
+-- 
+2.14.3
+

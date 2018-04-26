@@ -1,4 +1,4 @@
-From 81ee1dc2c180e285b641eaa88b823179bbad172e Mon Sep 17 00:00:00 2001
+From 27de14001d841d70172c3addf8b97bd4644f32c2 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
 Date: Wed, 25 Apr 2018 21:19:20 +0200
 Subject: [PATCH] omap-gpmc.c: Add more debug
@@ -8,14 +8,14 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
 ---
- drivers/memory/omap-gpmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/memory/omap-gpmc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index 7a1eb7698d8f..c8c36a59d1d1 100644
+index 9f2a060035ee..139c3d2ea68b 100644
 --- a/drivers/memory/omap-gpmc.c
 +++ b/drivers/memory/omap-gpmc.c
-@@ -1557,6 +1557,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+@@ -1543,6 +1543,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
  {
  	u32 config1;
  
@@ -24,7 +24,7 @@ index 7a1eb7698d8f..c8c36a59d1d1 100644
  	if ((!p->device_width) || (p->device_width > GPMC_DEVWIDTH_16BIT)) {
  		pr_err("%s: invalid width %d!", __func__, p->device_width);
  		return -EINVAL;
-@@ -1621,6 +1623,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+@@ -1607,6 +1609,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
  
  	gpmc_cs_write_reg(cs, GPMC_CS_CONFIG1, config1);
  
@@ -33,6 +33,15 @@ index 7a1eb7698d8f..c8c36a59d1d1 100644
  	return 0;
  }
  
+@@ -1916,6 +1920,8 @@ static int gpmc_probe_generic_child(struct platform_device *pdev,
+ 	/* Enable CS region */
+ 	gpmc_cs_enable_mem(cs);
+ 
++	gpmc_cs_show_timings(cs, "after gpmc_probe_generic_child");
++
+ no_timings:
+ 
+ 	/* create platform device, NULL on error or when disabled */
 -- 
 2.14.3
 

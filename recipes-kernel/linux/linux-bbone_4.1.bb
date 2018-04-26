@@ -14,6 +14,7 @@ SRC_URI = " \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
     file://0001-memory-omap-gpmc-Fix-unselectable-debug-option-for-GPMC.patch \
     file://0002-omap-gpmc.c-Add-more-debug.patch \
+    file://0003-omap-gpmc-Display-correct-value-for-device-width-in-.patch \
     file://uEnv.txt \
     file://RemoveUnused.cfg \
 "
