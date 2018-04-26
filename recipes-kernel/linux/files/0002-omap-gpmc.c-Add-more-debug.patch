@@ -1,0 +1,38 @@
+From 81ee1dc2c180e285b641eaa88b823179bbad172e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Wed, 25 Apr 2018 21:19:20 +0200
+Subject: [PATCH] omap-gpmc.c: Add more debug
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ drivers/memory/omap-gpmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index 7a1eb7698d8f..c8c36a59d1d1 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -1557,6 +1557,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+ {
+ 	u32 config1;
+ 
++	gpmc_cs_show_timings(cs, "before gpmc_cs_program_settings");
++
+ 	if ((!p->device_width) || (p->device_width > GPMC_DEVWIDTH_16BIT)) {
+ 		pr_err("%s: invalid width %d!", __func__, p->device_width);
+ 		return -EINVAL;
+@@ -1621,6 +1623,8 @@ int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+ 
+ 	gpmc_cs_write_reg(cs, GPMC_CS_CONFIG1, config1);
+ 
++	gpmc_cs_show_timings(cs, "after gpmc_cs_program_settings");
++
+ 	return 0;
+ }
+ 
+-- 
+2.14.3
+

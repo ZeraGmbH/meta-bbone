@@ -13,6 +13,7 @@ SRC_URI = " \
     git://github.com/schnitzeltony/linux.git;name=machine;branch=bb-4.1.13-ti-r36; \
     git://github.com/beagleboard/bb.org-overlays.git;name=dtoverlays;destsuffix=${DESTSUFFIX_DT_OVERLAYS} \
     file://0001-memory-omap-gpmc-Fix-unselectable-debug-option-for-GPMC.patch \
+    file://0002-omap-gpmc.c-Add-more-debug.patch \
     file://uEnv.txt \
     file://RemoveUnused.cfg \
 "
