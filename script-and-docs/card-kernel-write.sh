@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # card-kernel-write.sh
-# (c) Copyright 2013-2016 Andreas Müller <schnitzeltony@googlemail.com>
+# (c) Copyright 2013-2018 Andreas Müller <schnitzeltony@gmail.com>
 # Licensed under terms of GPLv2
 #
 # This script writes kernel+modules to SDCard. To
