@@ -79,7 +79,10 @@ do_deploy_append() {
     cp ${WORKDIR}/uEnv.txt ${DEPLOYDIR}
 }
 
-FILES_kernel-image += "/boot/uEnv.txt"
+# To be compatible to very old environments, ensure KERNEL_PACKAGE_NAME is set
+KERNEL_PACKAGE_NAME ??= "kernel"
+
+FILES_${KERNEL_PACKAGE_NAME}-image += "/boot/uEnv.txt"
 
 PACKAGES += "kernel-dtoverlays"
 FILES_kernel-dtoverlays = ""
