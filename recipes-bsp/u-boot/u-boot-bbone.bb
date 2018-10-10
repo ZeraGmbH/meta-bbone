@@ -10,6 +10,7 @@ SRC_URI = " \
     file://0001-am335x_evm.h-console-ttyO0-ttyS0.patch \
     file://0002-U-Boot-1-3-Copy-gcc5-over-to-compiler-gcc6.h-as-a-beginning-of-support.patch \
     file://0003-Drop-initial-note-as-sooen-as-possible.patch \
+    file://0004-Fix-build-with-gcc7.patch \
 "
 SRCREV = "33711bdd4a4dce942fb5ae85a68899a8357bdd94"
 PV = "v2015.07"
