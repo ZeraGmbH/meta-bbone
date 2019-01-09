@@ -1,0 +1,145 @@
+From patchwork Thu Jul 26 08:13:23 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Arnd Bergmann <arnd@arndb.de>
+X-Patchwork-Id: 10545399
+Return-Path: 
+ <linux-arm-kernel-bounces+patchwork-linux-arm=patchwork.kernel.org@lists.infradead.org>
+Received: from mail.wl.linuxfoundation.org (pdx-wl-mail.web.codeaurora.org
+ [172.30.200.125])
+	by pdx-korg-patchwork-2.web.codeaurora.org (Postfix) with ESMTP id E72D614E0
+	for <patchwork-linux-arm@patchwork.kernel.org>;
+ Thu, 26 Jul 2018 08:15:03 +0000 (UTC)
+Received: from mail.wl.linuxfoundation.org (localhost [127.0.0.1])
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTP id D6ABB2898C
+	for <patchwork-linux-arm@patchwork.kernel.org>;
+ Thu, 26 Jul 2018 08:15:03 +0000 (UTC)
+Received: by mail.wl.linuxfoundation.org (Postfix, from userid 486)
+	id C687A2AE2B; Thu, 26 Jul 2018 08:15:03 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on
+	pdx-wl-mail.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,MAILING_LIST_MULTI autolearn=ham version=3.3.1
+Received: from bombadil.infradead.org (bombadil.infradead.org
+ [198.137.202.133])
+	(using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.wl.linuxfoundation.org (Postfix) with ESMTPS id CBB902898C
+	for <patchwork-linux-arm@patchwork.kernel.org>;
+ Thu, 26 Jul 2018 08:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lists.infradead.org; s=bombadil.20170209; h=Sender:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Cc:List-Subscribe:
+	List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:References:
+	In-Reply-To:Message-Id:Date:Subject:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=Kw5EJ1xohplS0mPcIp1aBHafElI3k+Z8lBSh66fljTQ=; b=Aqy/rcWRTsXVntHhrCbBhc/j4o
+	lQ9uf4PwSuAH180HU3FxXPNB0k3hsZc8ntg3+vmhIUT54pujFH2I+T0HoM327HeCdWeT9PpczUfvr
+	WaxJyohaJPWe03AzB2nVJyff+znConu+5ACfyf2zUMgKaFF6uBNWUIVxppVrD7j+OByDDx5cSX6Un
+	h3sOBLvg+nQqypo5IXdyF3yvTPHqSaUrkZ8VKsorp9QtvAf1/NU112ZxW5YLEo2j8Yy695fam+WLV
+	myLo3PqYZWzV7q8Pw+X1f6Wm8zjssj0ihI6nggI06uNm+x45KuYoaQ3qOc7uxa0h68Bres8jZsOvK
+	Tf7ZbbZw==;
+Received: from localhost ([127.0.0.1] helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtp (Exim 4.90_1 #2 (Red Hat Linux))
+	id 1fibQI-0001Fy-3Q; Thu, 26 Jul 2018 08:14:58 +0000
+Received: from mout.kundenserver.de ([217.72.192.74])
+ by bombadil.infradead.org with esmtps (Exim 4.90_1 #2 (Red Hat Linux))
+ id 1fibQE-0001F3-B3
+ for linux-arm-kernel@lists.infradead.org; Thu, 26 Jul 2018 08:14:56 +0000
+Received: from wuerfel.lan ([109.193.40.16]) by mrelayeu.kundenserver.de
+ (mreue105 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 0MbgoP-1fRu0p0Mj7-00J5BE; Thu, 26 Jul 2018 10:14:38 +0200
+From: Arnd Bergmann <arnd@arndb.de>
+To: stable@vger.kernel.org
+Subject: [PATCH] [stable 4.4] ARM: fix put_user() for gcc-8
+Date: Thu, 26 Jul 2018 10:13:23 +0200
+Message-Id: <20180726081358.3829157-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20180726081358.3829157-1-arnd@arndb.de>
+References: <20180726081358.3829157-1-arnd@arndb.de>
+X-Provags-ID: V03:K1:UUgT1AMB/NxidFJr0i67FepLlIiyssylGse4dgohucyCZO4rYp8
+ tV4w2Bh+tJt0J5DMm6J5D/q8RI20CHQP6arc72AHmoV6yL37lsde/AbLWA9dSHoL50R6ct4
+ 0of45RqLK94mdR9SECvbetKsG64DilQpZ6tCAjAmMLw3F3veTdn5gFmZtOv0k1QBOvgHA9Z
+ kLJXT/QcJA+YMPDHzcmBQ==
+X-UI-Out-Filterresults: notjunk:1;V01:K0:493e+/H9J0k=:265iuy3bTqrmv8jRvrsRd2
+ iPmaW7fI9W3ddyKcD1HdrU6Q+VAnhmEj5GVon8jggZ1tKmjDrRR62pEUHNctUMGOYQT8PcX4x
+ GesHXrKfgoiXwsU52poxRzu6Hqbt3W2aBBDyRTXmx8cLISowHfMIYx3JLMYmqGPsQqAjAbHYC
+ u7jeZixOmBHALljeJSqjX9/Xf7TXtHjoLEc8PTR24XJhY8xD9LQd5cfIHDescYUTDDQHPkLwA
+ BpinRrY22hEefcBoYU0sLAQ1x1bUox45Pb0N2qwLyfi2+KNrxvSf1KZg7QMJSwL6jvKQFgafD
+ xrg781ng2AdlrXJoaL4mCic70PWnPkc9G3SDkTbQ8xx2NeaSbX37s1lLcud8VlzcSJvVUvisH
+ K/1M7Jaot0AKtiCq4kEyzMg3aOVq1HmhUUje67ZL12tdouZHq4Hc0Qch0hHkNh+7smw01YtoV
+ uJbwGch81x3VCOEnHqkif2cTxZ+lkl+YfCMLrtIgrkos2OKm3sajZzQopxbvCiZ9lY8PkvkDL
+ CKoPSktCIJ7rahC8783ImN1V0fafi4hgslkurfji7JLsvZImjvPBS2LP2mF3AhSiiruD+dita
+ lp7VWdRzPBp94HnBo3k802zDRvwya0I4TY/ReMfljI3PxKQSwMNEpvENNFnspfnYw6tCit3qt
+ Seh+E6L3CWwfNc/MyZCEM+OjUCI1q6fZim9/26qub9N/cQnz5TrXYNQBdrAiOq8w3Eac=
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20180726_011454_685249_A31A4BBC 
+X-CRM114-Status: GOOD (  13.29  )
+X-BeenThere: linux-arm-kernel@lists.infradead.org
+X-Mailman-Version: 2.1.21
+Precedence: list
+List-Id: <linux-arm-kernel.lists.infradead.org>
+List-Unsubscribe: 
+ <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: 
+ <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Cc: gregkh@linuxfoundation.org, Russell King <linux@arm.linux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: 
+ linux-arm-kernel-bounces+patchwork-linux-arm=patchwork.kernel.org@lists.infradead.org
+X-Virus-Scanned: ClamAV using ClamSMTP
+
+Building kernels before linux-4.7 with gcc-8 results in many build failures
+when gcc triggers a check that was meant to catch broken compilers:
+
+/tmp/ccCGMQmS.s:648: Error: .err encountered
+
+According to the discussion in the gcc bugzilla, a local "register
+asm()" variable is still supposed to be the correct way to force an
+inline assembly to use a particular register, but marking it 'const'
+lets the compiler do optimizations that break that, i.e the compiler is
+free to treat the variable as either 'const' or 'register' in that case.
+
+Upstream commit 9f73bd8bb445 ("ARM: uaccess: remove put_user() code
+duplication") fixed this problem in linux-4.8 as part of a larger change,
+but seems a little too big to be backported to 4.4.
+
+Let's take the simplest fix and change only the one broken line in the
+same way as newer kernels.
+
+Suggested-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85745
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=86673
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+This should also apply to older kernels before 4.4, but I did not try that.
+Presumably they have additional problems with modern compilers anyway.
+
+ arch/arm/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+index 35c9db857ebe..cd8b589111ba 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -251,7 +251,7 @@ extern int __put_user_8(void *, unsigned long long);
+ 	({								\
+ 		unsigned long __limit = current_thread_info()->addr_limit - 1; \
+ 		const typeof(*(p)) __user *__tmp_p = (p);		\
+-		register const typeof(*(p)) __r2 asm("r2") = (x);	\
++		register typeof(*(p)) __r2 asm("r2") = (x);	\
+ 		register const typeof(*(p)) __user *__p asm("r0") = __tmp_p; \
+ 		register unsigned long __l asm("r1") = __limit;		\
+ 		register int __e asm("r0");				\

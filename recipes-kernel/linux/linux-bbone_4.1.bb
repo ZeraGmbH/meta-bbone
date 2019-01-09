@@ -15,6 +15,8 @@ SRC_URI = " \
     file://0001-memory-omap-gpmc-Fix-unselectable-debug-option-for-GPMC.patch \
     file://0002-omap-gpmc.c-Add-more-debug.patch \
     file://0003-omap-gpmc-Display-correct-value-for-device-width-in-.patch \
+    file://0004-stable-4.4-ARM-fix-put_user-for-gcc-8.patch \
+    file://0005-give-up-on-gcc-ilog2-constant-optimizations.patch \
     file://uEnv.txt \
     file://RemoveUnused.cfg \
 "
