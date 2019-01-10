@@ -1,0 +1,29 @@
+From 661e34a1a3d2623bd3ab3e4afb852285eddba776 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+Date: Thu, 10 Jan 2019 10:57:49 +0100
+Subject: [PATCH] Drop initial note as soon as possible
+
+* we had a custom board with broken sdram that seemed completely dead form
+  console's perspective
+* we see initial message twice now but this shold be ok
+
+Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+---
+ arch/arm/mach-omap2/am33xx/board.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mach-omap2/am33xx/board.c b/arch/arm/mach-omap2/am33xx/board.c
+index f5f2bd5308..a8276b6925 100644
+--- a/arch/arm/mach-omap2/am33xx/board.c
++++ b/arch/arm/mach-omap2/am33xx/board.c
+@@ -474,6 +474,7 @@ void board_init_f(ulong dummy)
+ {
+ 	hw_data_init();
+ 	early_system_init();
++	preloader_console_init();
+ 	board_early_init_f();
+ 	sdram_init();
+ 	/* dram_init must store complete ramsize in gd->ram_size */
+-- 
+2.20.1
+
