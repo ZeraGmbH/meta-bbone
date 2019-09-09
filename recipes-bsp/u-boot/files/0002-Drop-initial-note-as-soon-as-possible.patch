@@ -1,5 +1,5 @@
 From 661e34a1a3d2623bd3ab3e4afb852285eddba776 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
 Date: Thu, 10 Jan 2019 10:57:49 +0100
 Subject: [PATCH] Drop initial note as soon as possible
 
@@ -7,7 +7,7 @@ Subject: [PATCH] Drop initial note as soon as possible
   console's perspective
 * we see initial message twice now but this shold be ok
 
-Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
 ---
  arch/arm/mach-omap2/am33xx/board.c | 1 +
  1 file changed, 1 insertion(+)
