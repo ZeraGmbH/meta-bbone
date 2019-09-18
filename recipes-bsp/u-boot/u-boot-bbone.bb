@@ -10,7 +10,7 @@ SRC_URI = " \
     file://0001-am335x_evm.h-console-ttyO0-ttyS0.patch \
     file://0002-Drop-initial-note-as-soon-as-possible.patch \
 "
-SRCREV = "0157013f4a4945bbdb70bb4d98d680e0845fd784"
-PV = "v2018.11"
+SRCREV = "e5aee22e4be75e75a854ab64503fc80598bc2004"
+PV = "v2019.07"
 S = "${WORKDIR}/git"
 
