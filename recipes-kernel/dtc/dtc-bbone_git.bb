@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://GPL;md5=94d55d512a9ba36caa9b7df079bae19f \
 SRC_URI = " \
     git://github.com/pantoniou/dtc.git;branch=dt-overlays6 \
     file://0001-Makefile-align-build-to-avoid-conflicts-with-kernel-.patch \
+    file://0002-Fix-build-with-gcc-10.patch \
 "
 SRCREV = "4273dca28b716396cefde8027c7b3280a0b9a4b5"
 PV = "1.4.1+git${SRCPV}"

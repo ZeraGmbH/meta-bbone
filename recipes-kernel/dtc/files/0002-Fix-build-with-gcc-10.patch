@@ -1,0 +1,28 @@
+From 7ef100fb7c3ff7a97d7bef1972ddb3f9e57478a6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Mon, 6 Feb 2023 22:29:01 +0100
+Subject: [PATCH] Fix build with gcc 10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ dtc-lexer.l | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index fd825eb..24af549 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
+ 
+-YYLTYPE yylloc;
+ extern bool treesource_error;
+ 
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+-- 
+2.39.1
+
