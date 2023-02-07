@@ -17,6 +17,7 @@ SRC_URI = " \
     file://0003-omap-gpmc-Display-correct-value-for-device-width-in-.patch \
     file://0004-stable-4.4-ARM-fix-put_user-for-gcc-8.patch \
     file://0005-give-up-on-gcc-ilog2-constant-optimizations.patch \
+    file://0006-Remove-redundant-YYLOC-global-declaration.patch \
     file://uEnv.txt \
     file://RemoveUnused.cfg \
 "
